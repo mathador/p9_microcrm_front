@@ -7,32 +7,59 @@ on:
     branches: [main]
 
 jobs:
+  # Job de test et build du frontend Angular
   frontend:
-    name: Frontend Angular build + tests
+    name: Frontend Angular build + tests + SonarCloud
     runs-on: ubuntu-latest
 
     steps:
+      # Récupération du code source
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Configuration de Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20" # Version de Node.js
+          cache: "npm" # Mise en cache des dépendances npm
+          cache-dependency-path: "front/package-lock.json"
 
-      - name: Install dependencies
-        run: npm ci
+      # Installation des dépendances npm
+      - name: Install frontend dependencies
+        working-directory: front
+        run: npm ci # Installation propre (plus rapide que npm install)
 
-      - name: Run tests and generate coverage
-        run: npx ng test --watch=false --browsers=ChromeHeadless --code-coverage
+      # Exécution des tests unitaires Angular avec couverture
+      - name: Run frontend tests and generate coverage
+        working-directory: front
+        run: |
+          npx ng test --watch=false --browsers=ChromeHeadless --code-coverage
+          # --watch=false : pas de surveillance continue
+          # --browsers=ChromeHeadless : navigateur headless pour CI
+          # --code-coverage : génération des rapports de couverture
 
-      - name: Upload coverage report
+      # Upload des rapports de couverture frontend
+      - name: Upload frontend coverage report
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage-report
-          path: coverage
+          path: front/coverage
 
+      # Build du frontend (dist)
+      - name: Build frontend Angular
+        working-directory: front
+        run: npx @angular/cli build --optimization
+
+      # Upload de la dist compilée pour utilisation dans le deploy
+      - name: Upload frontend dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: front/dist/microcrm/browser
+          retention-days: 1 # Garder seulement 1 jour, c'est temporaire
+
+      # Analyse SonarCloud pour le frontend
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:

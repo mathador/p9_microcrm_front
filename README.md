@@ -1,3 +1,12 @@
+# MicroCRM Projet 9 - Gérez un projet d'intégration et de déploiement continue
+
+MicroCRM est une application de démonstration basique ayant pour objectif de servir de socle pour le module "Projet 9 - Gérez un projet d'intégration et de déploiement continue".
+
+L'application MicroCRM est une implémentation simplifiée d'un ["CRM" (Customer Relationship Management)](https://fr.wikipedia.org/wiki/Gestion_de_la_relation_client). Les fonctionnalités sont limitées à la création, édition et la visualisations des individus liés à des organisations.
+
+![Page d'accueil](./screenshots/screenshot_1.png)
+![Édition de la fiche d'un individu](./screenshots/screenshot_2.png)
+
 # MicroCRM - Frontend
 
 Ce projet est la partie Frontend de l'application MicroCRM, développée avec Angular 17.
