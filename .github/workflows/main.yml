@@ -23,16 +23,14 @@ jobs:
         with:
           node-version: "20" # Version de Node.js
           cache: "npm" # Mise en cache des dépendances npm
-          cache-dependency-path: "front/package-lock.json"
+          cache-dependency-path: "package-lock.json"
 
       # Installation des dépendances npm
       - name: Install frontend dependencies
-        working-directory: front
         run: npm ci # Installation propre (plus rapide que npm install)
 
       # Exécution des tests unitaires Angular avec couverture
       - name: Run frontend tests and generate coverage
-        working-directory: front
         run: |
           npx ng test --watch=false --browsers=ChromeHeadless --code-coverage
           # --watch=false : pas de surveillance continue
@@ -44,11 +42,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage-report
-          path: front/coverage
+          path: coverage
 
       # Build du frontend (dist)
       - name: Build frontend Angular
-        working-directory: front
         run: npx @angular/cli build --optimization
 
       # Upload de la dist compilée pour utilisation dans le deploy
@@ -56,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
-          path: front/dist/microcrm/browser
+          path: dist/microcrm/browser
           retention-days: 1 # Garder seulement 1 jour, c'est temporaire
 
       # Analyse SonarCloud pour le frontend
