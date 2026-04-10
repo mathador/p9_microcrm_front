@@ -16,11 +16,11 @@ Ce projet est la partie Frontend de l'application MicroCRM, développée avec An
 - Node.js v20+
 - npm
 
-##### Dépendances
+### Dépendances
 
 - [NPM >= 10.2.4](https://www.npmjs.com/)
 
-##### Procédure
+### Procédure
 
 1. (La première fois seulement) Installer les dépendances NodeJS:
 
@@ -52,15 +52,13 @@ Le navigateur s'ouvre et affiche les résultats
 
 ### Images Docker
 
-#### Client
-
-##### Construire l'image
+#### Construire l'image
 
 ```shell
 docker build -t orion-microcrm-front:latest .
 ```
 
-##### Exécuter l'image
+#### Exécuter l'image
 
 ```shell
 docker run -it --rm -p 80:80 -p 443:443 orion-microcrm-front:latest
