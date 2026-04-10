@@ -67,6 +67,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=mathador_p9_OrionMicroCrm_Front
+            -Dsonar.projectKey=mathador_p9_microcrm_front
             -Dsonar.organization=oc-projet9
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
