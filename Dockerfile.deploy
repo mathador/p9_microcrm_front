@@ -1,0 +1,15 @@
+FROM alpine:3.19 AS runtime
+
+RUN apk add --no-cache caddy
+
+WORKDIR /app
+
+# On attend les fichiers compilés dans le dossier 'dist' du contexte de build
+# (téléchargés depuis les artefacts du workflow)
+COPY dist/ /app/front
+COPY Caddyfile /app/Caddyfile
+
+EXPOSE 80
+EXPOSE 443
+
+CMD ["/usr/sbin/caddy", "run", "--config", "/app/Caddyfile", "--adapter", "caddyfile"]

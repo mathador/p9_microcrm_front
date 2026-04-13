@@ -67,3 +67,59 @@ jobs:
             -Dsonar.projectKey=mathador_p9_microcrm_front
             -Dsonar.organization=oc-projet9
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+
+  # Étape de déploiement continu (CD) - Construction et publication de l'image Docker frontend
+  deploy:
+    name: Build and Deploy Frontend Docker Image
+    runs-on: ubuntu-latest
+    needs: frontend
+    # Condition : uniquement sur push vers main, pas sur les pull requests
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Téléchargement de la dist frontend compilée
+      - name: Download frontend dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: ./dist
+
+      # Configuration de Docker Buildx pour le multi-plateforme
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Authentification auprès du GitHub Container Registry
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
+
+      # Extraction des métadonnées pour le tagging automatique des images
+      - name: Extract metadata for Docker image
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      # Construction et publication de l'image Docker
+      - name: Build and push Docker image from pre-compiled artifact
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.deploy
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
