@@ -1,6 +1,21 @@
-* {
-	root * /app/front
-	encode gzip
-	try_files {path} /index.html
-	file_server
+{
+    # Configuration globale des logs
+    log {
+        output stdout
+        format json
+        level info
+    }
+}
+
+# Bloc pour votre site (serveur Angular)
+root * /app/front
+encode gzip
+try_files {path} /index.html
+file_server
+
+# Logs d'accès spécifiques (optionnel mais recommandé)
+log {
+    output stdout
+    format json
+    level info
 }
