@@ -1,5 +1,6 @@
+# Désactive l'automatisation TLS (Let's Encrypt) pour le développement local
 {
-    # Configuration globale des logs
+    auto_https off
     log {
         output stdout
         format json
@@ -7,15 +8,15 @@
     }
 }
 
-# Bloc pour votre site (serveur Angular)
-root * /app/front
-encode gzip
-try_files {path} /index.html
-file_server
-
-# Logs d'accès spécifiques (optionnel mais recommandé)
-log {
-    output stdout
-    format json
-    level info
+# Serveur HTTP sur le port 80 (pas de TLS)
+:80 {
+    root * /app/front
+    encode gzip
+    try_files {path} /index.html
+    file_server
+    log {
+        output stdout
+        format json
+        level info
+    }
 }
