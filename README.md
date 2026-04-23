@@ -1,5 +1,10 @@
 # MicroCRM Projet 9 - Gérez un projet d'intégration et de déploiement continue
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mathador_p9_microcrm_front&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=mathador_p9_microcrm_front)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=mathador_p9_microcrm_front&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=mathador_p9_microcrm_front)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=mathador_p9_microcrm_front&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=mathador_p9_microcrm_front)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mathador_p9_microcrm_front&metric=coverage)](https://sonarcloud.io/summary/new_code?id=mathador_p9_microcrm_front)
+
 MicroCRM est une application de démonstration basique ayant pour objectif de servir de socle pour le module "Projet 9 - Gérez un projet d'intégration et de déploiement continue".
 
 L'application MicroCRM est une implémentation simplifiée d'un ["CRM" (Customer Relationship Management)](https://fr.wikipedia.org/wiki/Gestion_de_la_relation_client). Les fonctionnalités sont limitées à la création, édition et la visualisations des individus liés à des organisations.
