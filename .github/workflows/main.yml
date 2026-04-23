@@ -11,6 +11,8 @@ jobs:
   frontend:
     name: Frontend Angular build + tests + SonarCloud
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
 
     steps:
       # Récupération du code source
@@ -31,6 +33,8 @@ jobs:
 
       # Exécution des tests unitaires Angular avec couverture
       - name: Run frontend tests and generate coverage
+        id: frontend_tests
+        continue-on-error: true
         run: |
           npx ng test --watch=false --browsers=ChromeHeadless --code-coverage
           # --watch=false : pas de surveillance continue
@@ -39,13 +43,28 @@ jobs:
 
       # Upload des rapports de couverture frontend
       - name: Upload frontend coverage report
+        if: steps.frontend_tests.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage-report
           path: coverage
 
+      # Vérification explicite de la réussite des tests
+      - name: Verify tests passed
+        if: steps.frontend_tests.outcome == 'success'
+        run: echo "✅ Tests réussis - Le déploiement peut procéder"
+
+      # Vérification d'échec des tests et blocage explicite
+      - name: Tests failed - Block deployment
+        if: steps.frontend_tests.outcome == 'failure'
+        run: |
+          echo "❌ Les tests ont échoué!"
+          echo "Le déploiement est BLOQUÉ jusqu'à la correction des tests."
+          exit 1
+
       # Build du frontend (dist)
       - name: Build frontend Angular
+        if: steps.frontend_tests.outcome == 'success'
         run: npx @angular/cli build --optimization
 
       # Upload de la dist compilée pour utilisation dans le deploy
