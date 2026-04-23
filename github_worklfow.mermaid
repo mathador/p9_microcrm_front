@@ -1,0 +1,27 @@
+flowchart TD
+    %% Déclencheurs de la pipeline
+    A0[Push/PR sur main] --> CI
+
+    subgraph CI["CI - Continuous Integration"]
+        A[Checkout repository] --> B[Set up Node.js]
+        B --> C[Install frontend dependencies]
+        C --> D[Run frontend tests and generate coverage]
+        D --> E{Tests outcome?}
+        E -->|Success| F[Upload frontend coverage report]
+        E -->|Failure| G[Tests failed - Block deployment]
+        F --> H[Verify tests passed]
+        H --> I[Build frontend Angular]
+        I --> J[Upload frontend dist artifact]
+        J --> K[SonarCloud Scan]
+    end
+
+    subgraph CD["CD - Continuous Deployment"]
+        L[Checkout repository] --> M[Download frontend dist artifact]
+        M --> N[Set up Docker Buildx]
+        N --> O[Log in to GitHub Container Registry]
+        O --> P[Extract metadata for Docker image]
+        P --> Q[Build and push Docker image]
+    end
+
+    CI -->|needs: frontend| CD
+ 
